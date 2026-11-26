@@ -38,13 +38,16 @@ if("IntersectionObserver" in window){
 
 /* Carrusel de trabajos: preparado para imágenes verticales en assets/ */
 const TRABAJOS=[
- {src:"assets/trabajo-01.jpg",title:"Manicura clásica",alt:"Trabajo de manicura clásica"},
- {src:"assets/trabajo-02.jpg",title:"Pedicura",alt:"Trabajo de pedicura"},
- {src:"assets/trabajo-03.jpg",title:"Gel Rubber",alt:"Trabajo de uñas con Gel Rubber"},
- {src:"assets/trabajo-04.jpg",title:"Acrílicas",alt:"Trabajo de uñas acrílicas"},
- {src:"assets/trabajo-05.jpg",title:"Nail Art",alt:"Diseño de Nail Art"}
+ {src:"assets/trabajo-01.jpg",alt:"Trabajo de manicura clásica"},
+ {src:"assets/trabajo-02.jpg",alt:"Trabajo de pedicura"},
+ {src:"assets/trabajo-03.jpg",alt:"Trabajo de uñas con Gel Rubber"},
+ {src:"assets/trabajo-04.jpeg",alt:"Trabajo de uñas acrílicas"},
+ {src:"assets/trabajo-05.jpeg",alt:"Diseño de Nail Art"},
+ {src:"assets/trabajo-06.jpeg",alt:"Diseño de uñas nude y elegante"},
+ {src:"assets/trabajo-07.jpeg",alt:"Diseño minimalista de Nail Art"},
+ {src:"assets/trabajo-08.jpeg",alt:"Uñas acrílicas con acabado sofisticado"}
 ];
-const renderWorks=()=>$("#workTrack").innerHTML=TRABAJOS.map((work,i)=>`<figure class="work-card"><div class="work-card__media"><img src="${work.src}" alt="${work.alt}" loading="lazy" onerror="this.remove();this.parentElement.classList.add('is-missing')"><span class="work-card__placeholder">Cargá una imagen vertical</span></div><figcaption><span>0${i+1}</span>${work.title}</figcaption></figure>`).join("");
+const renderWorks=()=>$("#workTrack").innerHTML=TRABAJOS.map(work=>`<figure class="work-card"><div class="work-card__media"><img src="${work.src}" alt="${work.alt}" loading="lazy" onerror="this.remove();this.parentElement.classList.add('is-missing')"><span class="work-card__placeholder">Cargá una imagen vertical</span></div></figure>`).join("");
 renderWorks();
 const workCarousel=$("#workCarousel"),workTrack=$("#workTrack"),workPrev=$("#workPrev"),workNext=$("#workNext"),workDots=$("#workDots");
 if(workCarousel&&workTrack){
@@ -94,6 +97,8 @@ const idOf=(f,t,p)=>`${f}_${t.replace(":","")}_${p}`;
 const fmtF=f=>f.split("-").reverse().join("/");
 const prosDe=(e,dt)=>PROS.filter(p=>(!p.esp||p.esp.includes(e))&&slotsDe(dt,p).length);
 const espsDe=dt=>SERVICIOS.map(s=>s.n).filter(e=>prosDe(e,dt).length);
+const horariosDe=(e,dt)=>[...new Set(prosDe(e,dt).flatMap(p=>slotsDe(dt,p)))].sort((a,b)=>toM(a)-toM(b));
+const proParaHorario=(fecha,e,dt,hora)=>prosDe(e,dt).find(p=>!booked[idOf(fecha,hora,p.id)]);
 
 function cal(){
  const y=view.getFullYear(),m=view.getMonth();
@@ -112,32 +117,29 @@ function slots(){
  if(!selD)return;
  const[y,m,d]=selD.split("-").map(Number),dt=new Date(y,m-1,d),now=new Date(),es=espsDe(dt);
  if(selE&&!es.includes(selE)){selE=selP=selT=null}
- const ps=selE?prosDe(selE,dt):[];
- if(selP&&!ps.some(p=>p.id===selP)){selP=selT=null}
- if(selE&&!selP&&ps.length===1)selP=ps[0].id;
  const chips=(a,k,sel)=>a.map(x=>`<button type="button" class="${x.id===sel?"on":""}" data-${k}="${x.id}">${x.n}</button>`).join("");
  $("#slotHint").classList.add("hide");$("#fechaTxt").classList.remove("hide");
  $("#fechaTxt").textContent=dt.toLocaleDateString("es-AR",{weekday:"long",day:"numeric",month:"long"});
  $("#espBox").classList.remove("hide");
  $("#esps").innerHTML=es.length?chips(es.map(n=>({id:n,n})),"e",selE):'<p class="hint" style="margin:0">No hay atención ese día.</p>';
- $("#proBox").classList.toggle("hide",!selE||PROS.length<2);
- $("#pros").innerHTML=chips(ps,"p",selP);
- const ver=!!(selE&&selP);
+ const ver=!!selE;
+ const horarios=ver?horariosDe(selE,dt):[];
+ if(selT)selP=proParaHorario(selD,selE,dt,selT)?.id||null;
  $("#horBox").classList.toggle("hide",!ver);$("#legend").classList.toggle("hide",!ver);
- $("#slots").innerHTML=ver?slotsDe(dt,proDe(selP)).map(t=>{
-  const e=booked[idOf(selD,t,selP)];
-  if(e)return`<button class="slot" disabled><s>${t}</s><small>${e==="confirmado"?"Reservado":"Pendiente"}</small></button>`;
+ $("#slots").innerHTML=ver?horarios.map(t=>{
+  const pro=proParaHorario(selD,selE,dt,t),bloqueados=prosDe(selE,dt).filter(p=>booked[idOf(selD,t,p.id)]);
+  if(!pro)return`<button class="slot" disabled><s>${t}</s><small>${bloqueados.some(p=>booked[idOf(selD,t,p.id)]==="confirmado")?"Reservado":"Pendiente"}</small></button>`;
   const past=selD===key(now)&&new Date(`${selD}T${t}`)<=now;
   return`<button class="slot${t===selT?" sel":""}" data-t="${t}" ${past?"disabled":""}>${t}</button>`;
  }).join(""):"";
 }
 function refresh(){
- if(selT&&booked[idOf(selD,selT,selP)]){selT=null;$("#formBox").classList.add("hide")}
+ if(selT&&selD&&selE){const[y,m,d]=selD.split("-").map(Number),dt=new Date(y,m-1,d);selP=proParaHorario(selD,selE,dt,selT)?.id||null;if(!selP){selT=null;$("#formBox").classList.add("hide")}}
  cal();slots();
 }
 function limpiarSel(){
  selD=selT=selE=selP=null;$("#formBox").classList.add("hide");$("#slotHint").classList.remove("hide");
- ["#fechaTxt","#espBox","#proBox","#horBox","#legend"].forEach(s=>$(s).classList.add("hide"));$("#slots").innerHTML="";
+ ["#fechaTxt","#espBox","#horBox","#legend"].forEach(s=>$(s).classList.add("hide"));$("#slots").innerHTML="";
 }
 
 /* Solo se descargan los turnos ocupados del mes que se está mirando */
@@ -172,11 +174,12 @@ if(demo){
 
 $("#grid").onclick=e=>{const b=e.target.closest(".day");if(!b)return;selD=b.dataset.d;selT=null;$("#formBox").classList.add("hide");$("#okBox").classList.add("hide");refresh()};
 $("#esps").onclick=e=>{const b=e.target.closest("[data-e]");if(!b)return;selE=b.dataset.e;selP=null;selT=null;$("#formBox").classList.add("hide");slots()};
-$("#pros").onclick=e=>{const b=e.target.closest("[data-p]");if(!b)return;selP=b.dataset.p;selT=null;$("#formBox").classList.add("hide");slots()};
 $("#slots").onclick=e=>{
  const b=e.target.closest("[data-t]");if(!b)return;selT=b.dataset.t;
+ const[y,m,d]=selD.split("-").map(Number),dt=new Date(y,m-1,d);selP=proParaHorario(selD,selE,dt,selT)?.id||null;
+ if(!selP){slots();return}
  $("#okBox").classList.add("hide");$("#formBox").classList.remove("hide");$("#err").classList.add("hide");
- $("#resumen").textContent="Turno de "+selE+": "+fmtF(selD)+" a las "+selT+" h"+(PROS.length>1?" con "+proDe(selP).n:"");
+ $("#resumen").textContent="Turno de "+selE+": "+fmtF(selD)+" a las "+selT+" h";
  slots();$("#formBox").scrollIntoView({behavior:"smooth",block:"nearest"});
 };
 const mover=n=>{view=new Date(view.getFullYear(),view.getMonth()+n,1);limpiarSel();$("#okBox").classList.add("hide");cal();escuchar()};
@@ -194,7 +197,7 @@ $("#form").onsubmit=async e=>{
   if(x.code==="permission-denied"){booked[id]="pendiente";refresh()}
   return;
  }
- const msg=`Hola Maison Studio! Quiero reservar un turno:\n\nNombre: ${rec.nombre}\nTeléfono: ${rec.telefono}\nServicio: ${rec.servicio}\n`+(PROS.length>1?`Profesional: ${proDe(selP).n}\n`:"")+`Fecha: ${fmtF(rec.fecha)}\nHora: ${rec.hora} h\n`+(rec.comentario?`Comentarios: ${rec.comentario}\n`:"")+`\nTurno pendiente de confirmación.`;
+ const msg=`Hola Maison Studio! Quiero reservar un turno:\n\nNombre: ${rec.nombre}\nTeléfono: ${rec.telefono}\nServicio: ${rec.servicio}\nFecha: ${fmtF(rec.fecha)}\nHora: ${rec.hora} h\n`+(rec.comentario?`Comentarios: ${rec.comentario}\n`:"")+`\nTurno pendiente de confirmación.`;
  const url=`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`;
  $("#waLink").href=url;
  $("#formBox").classList.add("hide");$("#okBox").classList.remove("hide");

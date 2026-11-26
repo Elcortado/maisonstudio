@@ -12,7 +12,7 @@ const catalogoDeServiciosValido=servicios=>servicios.length===CATEGORIAS_OFICIAL
 let catalog=copyCatalog();
 const PN=id=>(catalog.profesionales.find(p=>p.id===id)||{}).n||"";
 const esp=t=>(catalog.servicios.find(s=>s.n===t.servicio||s.items.includes(t.servicio))||{n:"Otro"}).n; // servicio = categoría del catálogo
-let F,AU,db,auth,turnos={},estados={},unsubs=[],fe="todos",pf="",ef="",dD=key(hoy0()),dH="";
+let F,AU,db,auth,turnos={},estados={},unsubs=[],fe="todos",ef="",dD=key(hoy0()),dH="";
 
 function wa(t){
  let d=String(t.telefono).replace(/\D/g,"").replace(/^0+/,"");
@@ -24,7 +24,7 @@ const txtRango=()=>dD&&dH?(dD===dH?`el ${fmtF(dD)}`:`del ${fmtF(dD)} al ${fmtF(d
 
 function render(){
  const all=Object.entries(turnos).map(([id,t])=>({...t,id,estado:estados[id]||"pendiente"}));
- const rows=all.filter(t=>(!pf||t.pro===pf)&&(!ef||esp(t)===ef)&&(fe==="todos"||t.estado===fe))
+ const rows=all.filter(t=>(!ef||esp(t)===ef)&&(fe==="todos"||t.estado===fe))
   .sort((a,b)=>(a.fecha+a.hora).localeCompare(b.fecha+b.hora));
  const pend=rows.filter(t=>t.estado==="pendiente").length;
  const cuenta=f=>{const m={};rows.forEach(t=>{const k=f(t);m[k]=(m[k]||0)+1});return Object.entries(m).map(([k,v])=>`${esc(k)} <b>${v}</b>`).join(" · ")};
@@ -62,11 +62,10 @@ function renderCatalogo(){
  proList.innerHTML=catalog.profesionales.length?catalog.profesionales.map(p=>`<div class="catalog-item"><div class="catalog-item__main"><strong>${esc(p.n)}</strong><small>${esc(Array.isArray(p.esp)&&p.esp.length?p.esp.join(" · "):"Todas las especialidades")}</small></div><button class="delete-catalog" type="button" data-del-catalog="pro" data-id="${esc(p.id)}">Borrar</button></div>`).join(""):'<p class="vacio">Todavía no hay especialistas cargados.</p>';
 }
 function renderFiltros(){
- const proActual=catalog.profesionales.some(p=>p.id===pf),espActual=catalog.servicios.some(s=>s.n===ef);
- if(!proActual)pf="";if(!espActual)ef="";
- $("#pfil").innerHTML='<option value="">Todas</option>'+catalog.profesionales.map(p=>`<option value="${esc(p.id)}">${esc(p.n)}</option>`).join("");
+  const espActual=catalog.servicios.some(s=>s.n===ef);
+  if(!espActual)ef="";
  $("#efil").innerHTML='<option value="">Todas</option>'+[...catalog.servicios.map(s=>s.n),"Otro"].map(n=>`<option>${esc(n)}</option>`).join("");
- $("#pfil").value=pf;$("#efil").value=ef;$("#pbox").classList.remove("hide");$("#pfil").disabled=!catalog.profesionales.length;
+  $("#efil").value=ef;
 }
 async function cargarCatalogo(){
  const snap=await F.getDoc(F.doc(db,"config","catalogo"));
@@ -130,7 +129,6 @@ $("#fd").onchange=$("#fh").onchange=()=>{
  if(dD&&dH&&dD>dH){[dD,dH]=[dH,dD];$("#fd").value=dD;$("#fh").value=dH}
  suscribir();
 };
-$("#pfil").onchange=e=>{pf=e.target.value;render()};
 $("#efil").onchange=e=>{ef=e.target.value;render()};
 renderFiltros();
 $("#fd").value=dD;
