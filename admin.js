@@ -17,15 +17,16 @@ let F,AU,db,auth,turnos={},estados={},unsubs=[],fe="todos",ef="",dD=key(hoy0()),
 function wa(t){
  let d=String(t.telefono).replace(/\D/g,"").replace(/^0+/,"");
  if(!d.startsWith("54"))d=PAIS+d;
- const m=`Hola ${t.nombre}! Te confirmamos tu turno de ${t.servicio}${PN(t.pro)?" con "+PN(t.pro):""} el ${fmtF(t.fecha)} a las ${t.hora} h. ¡Te esperamos en Maison Studio!`;
+ const momento=t.hora&&t.hora!=="A confirmar"?` el ${fmtF(t.fecha)} a las ${t.hora} h`:` el ${fmtF(t.fecha)}; coordinamos el horario por WhatsApp`;
+ const m=`Hola ${t.nombre}! Te confirmamos tu turno de ${t.servicio}${PN(t.pro)?" con "+PN(t.pro):""}${momento}. ¡Te esperamos en Maison Studio!`;
  return`https://wa.me/${d}?text=${encodeURIComponent(m)}`;
 }
 const txtRango=()=>dD&&dH?(dD===dH?`el ${fmtF(dD)}`:`del ${fmtF(dD)} al ${fmtF(dH)}`):dD?`desde el ${fmtF(dD)} en adelante`:dH?`hasta el ${fmtF(dH)}`:"en todo el historial";
 
 function render(){
- const all=Object.entries(turnos).map(([id,t])=>({...t,id,estado:estados[id]||"pendiente"}));
+ const all=Object.entries(turnos).map(([id,t])=>({...t,id,estado:t.estado||estados[id]||"pendiente"}));
  const rows=all.filter(t=>(!ef||esp(t)===ef)&&(fe==="todos"||t.estado===fe))
-  .sort((a,b)=>(a.fecha+a.hora).localeCompare(b.fecha+b.hora));
+  .sort((a,b)=>(a.fecha+(a.hora||"")).localeCompare(b.fecha+(b.hora||"")));
  const pend=rows.filter(t=>t.estado==="pendiente").length;
  const cuenta=f=>{const m={};rows.forEach(t=>{const k=f(t);m[k]=(m[k]||0)+1});return Object.entries(m).map(([k,v])=>`${esc(k)} <b>${v}</b>`).join(" · ")};
  $("#tot").innerHTML=`<p class="n"><b>${rows.length}</b> ${rows.length===1?"turno":"turnos"} ${txtRango()}</p>`+(rows.length
@@ -38,7 +39,7 @@ function render(){
    h+=`<h3 class="dia">${new Date(y,m-1,d).toLocaleDateString("es-AR",{weekday:"long",day:"numeric",month:"long"})}</h3>`;
   }
   const ok=t.estado==="confirmado";
-  h+=`<div class="t"><div class="h">${esc(t.hora)}</div>
+  h+=`<div class="t"><div class="h">${esc(t.hora&&t.hora!=="A confirmar"?t.hora:"Horario a coordinar")}</div>
    <div><p><strong>${esc(t.nombre)}</strong> <span class="tag${ok?" ok":""}">${ok?"Confirmado":"Pendiente"}</span></p>
    <p>${esc(esp(t))}${t.servicio!==esp(t)?": "+esc(t.servicio):""}${PN(t.pro)?" · "+esc(PN(t.pro)):""} · Tel. ${esc(t.telefono)}</p>${t.comentario?`<p>“${esc(t.comentario)}”</p>`:""}</div>
    <div class="acc">${ok?"":`<button class="btn" data-a="ok" data-id="${esc(t.id)}">Confirmar</button>`}
@@ -168,8 +169,8 @@ $("#catalogo").onclick=async e=>{
 $("#lista").onclick=async e=>{
  const b=e.target.closest("[data-a]");if(!b)return;const id=b.dataset.id;
  try{
-  if(b.dataset.a==="ok")await F.updateDoc(F.doc(db,"ocupados",id),{estado:"confirmado"});
-  else if(confirm("¿Cancelar este turno? El horario volverá a quedar disponible.")){
+  if(b.dataset.a==="ok")await F.updateDoc(F.doc(db,"turnos",id),{estado:"confirmado"});
+  else if(confirm("¿Cancelar esta solicitud de turno?")){
    const w=F.writeBatch(db);w.delete(F.doc(db,"ocupados",id));w.delete(F.doc(db,"turnos",id));await w.commit();
   }
  }catch(x){alert("No se pudo completar la acción. Revisá tu conexión y los permisos.")}

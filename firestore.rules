@@ -30,7 +30,7 @@ service cloud.firestore {
     function validTurnBooking() {
       return request.resource.data.keys().hasOnly([
           'nombre', 'telefono', 'servicio', 'comentario',
-          'fecha', 'hora', 'pro', 'creado'
+          'fecha', 'hora', 'pro', 'estado', 'creado'
         ])
         && request.resource.data.nombre is string
         && request.resource.data.nombre.size() > 0
@@ -44,10 +44,11 @@ service cloud.firestore {
         && request.resource.data.comentario is string
         && request.resource.data.comentario.size() <= 300
         && validDate(request.resource.data.fecha)
-        && validTime(request.resource.data.hora)
+        && (validTime(request.resource.data.hora) || request.resource.data.hora == 'A confirmar')
         && request.resource.data.pro is string
         && request.resource.data.pro.size() > 0
         && request.resource.data.pro.size() <= 80
+        && request.resource.data.estado == 'pendiente'
         && request.resource.data.creado is timestamp;
     }
 
@@ -105,8 +106,7 @@ service cloud.firestore {
     match /turnos/{bookingId} {
       allow create: if request.auth == null
         && !exists(/databases/$(database)/documents/turnos/$(bookingId))
-        && validTurnBooking()
-        && linkedOccupiedBooking(bookingId);
+        && validTurnBooking();
       allow read, update, delete: if isAdmin();
     }
 
