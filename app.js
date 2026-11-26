@@ -12,7 +12,8 @@ const demo=firebaseConfig.apiKey.startsWith("TU_");
 let db,F,unsub=null,fbReady=null,tok=0;
 
 $("#waFlot").href="https://wa.me/"+CONFIG.whatsapp;
-const renderServices=()=>$("#cats").innerHTML=SERVICIOS.map((s,i)=>{const description=(s.items||[]).filter(Boolean).join(" ");return`<article class="card service-card"><span class="service-card__number">${String(i+1).padStart(2,"0")}</span><h3>${s.n}</h3><p class="service-card__description">${description}</p>${s.p?`<small>Consultar disponibilidad</small>`:""}</article>`}).join("");
+const slugServicio=s=>s.slug||String(s.n).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-");
+const renderServices=()=>$("#cats").innerHTML=SERVICIOS.map((s,i)=>{const description=(s.items||[]).filter(Boolean).join(" ");return`<article class="card service-card"><span class="service-card__number">${String(i+1).padStart(2,"0")}</span><h3>${s.n}</h3><p class="service-card__description">${description}</p><a class="service-card__link" href="${slugServicio(s)}.html">Ver servicio <span aria-hidden="true">↗</span></a></article>`}).join("");
 renderServices();
 
 /* Menú responsive */
