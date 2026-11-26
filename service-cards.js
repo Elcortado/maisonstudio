@@ -44,12 +44,12 @@ const SERVICE_WORKS={
   {name:"Manos & Pies Semipermanente",description:"Experiencia combinada de manicura con refuerzo y pedicura con esmaltado semipermanente.",meta:"44,00 € · 2 h",image:"assets/manosPies.jpg"}
  ],
  depilacion:[
-  {name:"Depilación mentón",description:"Depilación con cera para mantener la zona del mentón suave y prolija.",meta:"3,00 € · 10 min",image:"assets/servicios/depilacion-01.jpg"},
-  {name:"Depilación labio superior",description:"Depilación con cera del labio superior, realizada de forma rápida y cuidadosa.",meta:"5,00 € · 10 min",image:"assets/servicios/depilacion-02.jpg"},
-  {name:"Depilación de cejas",description:"Incluye diseño y depilación con cera para armonizar la mirada.",meta:"9,00 € · 25 min",image:"assets/servicios/depilacion-03.jpg"},
-  {name:"Depilación axilas",description:"Depilación con cera para una piel suave y cuidada.",meta:"12,00 € · 20 min",image:"assets/servicios/depilacion-04.jpg"},
-  {name:"Depilación medias piernas",description:"Depilación con cera desde el tobillo hasta la rodilla.",meta:"10,00 € · 20 min",image:"assets/servicios/depilacion-05.jpg"},
-  {name:"Depilación piernas enteras",description:"Depilación con cera de piernas completas para una sensación de suavidad duradera.",meta:"15,00 € · 30 min",image:"assets/servicios/depilacion-06.jpg"}
+  {name:"Depilación mentón",description:"Depilación con cera para mantener la zona del mentón suave y prolija.",meta:"3,00 € · 10 min",image:"assets/depilacionMenton.jpg"},
+  {name:"Depilación labio superior",description:"Depilación con cera del labio superior, realizada de forma rápida y cuidadosa.",meta:"5,00 € · 10 min",image:"assets/depilacionLabiosuperior.jpg"},
+  {name:"Depilación de cejas",description:"Incluye diseño y depilación con cera para armonizar la mirada.",meta:"9,00 € · 25 min",image:"assets/depilacionCejas.jpg"},
+  {name:"Depilación axilas",description:"Depilación con cera para una piel suave y cuidada.",meta:"12,00 € · 20 min",image:"assets/deílaciónAxilas.jpg"},
+  {name:"Depilación medias piernas",description:"Depilación con cera desde el tobillo hasta la rodilla.",meta:"10,00 € · 20 min",image:"assets/deílacionmediaPierna.jpg"},
+  {name:"Depilación piernas enteras",description:"Depilación con cera de piernas completas para una sensación de suavidad duradera.",meta:"15,00 € · 30 min",image:"assets/depilacionPiernaEntera.jpg"}
  ]
 };
 
