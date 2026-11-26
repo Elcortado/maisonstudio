@@ -1,7 +1,7 @@
 const SERVICE_WORKS={
  facial:[
-  {name:"Limpieza facial básica",description:"Resultados inmediatos para una piel más radiante desde la primera sesión. Incluye evaluación, limpieza, mascarilla de carbón, tratamiento calmante, sérum e hidratación.",meta:"30,00 € · 1 h",image:"assets/servicios/facial-01.jpg"},
-  {name:"Limpieza facial profunda",description:"Tratamiento completo con exfoliación, extracción de comedones y mascarilla adaptada a tu tipo de piel, además de sérum e hidratación.",meta:"45,00 € · 1 h 20 min",image:"assets/servicios/facial-02.jpg"}
+  {name:"Limpieza facial básica",description:"Resultados inmediatos para una piel más radiante desde la primera sesión. Incluye evaluación, limpieza, mascarilla de carbón, tratamiento calmante, sérum e hidratación.",meta:"30,00 € · 1 h",image:"assets/limpiezaBasica.jpg"},
+  {name:"Limpieza facial profunda",description:"Tratamiento completo con exfoliación, extracción de comedones y mascarilla adaptada a tu tipo de piel, además de sérum e hidratación.",meta:"45,00 € · 1 h 20 min",image:"assets/limpiezaProfunda.jpg"}
  ],
  pestanas:[
   {name:"Extensión de pestañas - Clásicas",description:"Aplicación de una extensión sobre cada pestaña natural para conseguir un resultado elegante, natural y definido, aportando longitud y un ligero extra de volumen.",meta:"40,00 € · 2 h 50 min",image:"assets/extensioPestañaClasica.jpeg"},
