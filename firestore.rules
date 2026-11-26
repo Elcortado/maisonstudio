@@ -1,0 +1,118 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.uid == "axjh1fRp3CP2EBYNQi8Gqnu4oWy2";
+    }
+
+    function validDate(value) {
+      return value is string && value.matches('^\\d{4}-\\d{2}-\\d{2}$');
+    }
+
+    function validTime(value) {
+      return value is string && value.matches('^\\d{2}:\\d{2}$');
+    }
+
+    function validOccupiedBooking() {
+      return request.resource.data.keys().hasOnly([
+          'fecha', 'hora', 'pro', 'estado'
+        ])
+        && validDate(request.resource.data.fecha)
+        && validTime(request.resource.data.hora)
+        && request.resource.data.pro is string
+        && request.resource.data.pro.size() > 0
+        && request.resource.data.pro.size() <= 80
+        && request.resource.data.estado == 'pendiente';
+    }
+
+    function validTurnBooking() {
+      return request.resource.data.keys().hasOnly([
+          'nombre', 'telefono', 'servicio', 'comentario',
+          'fecha', 'hora', 'pro', 'creado'
+        ])
+        && request.resource.data.nombre is string
+        && request.resource.data.nombre.size() > 0
+        && request.resource.data.nombre.size() <= 80
+        && request.resource.data.telefono is string
+        && request.resource.data.telefono.size() > 0
+        && request.resource.data.telefono.size() <= 30
+        && request.resource.data.servicio is string
+        && request.resource.data.servicio.size() > 0
+        && request.resource.data.servicio.size() <= 80
+        && request.resource.data.comentario is string
+        && request.resource.data.comentario.size() <= 300
+        && validDate(request.resource.data.fecha)
+        && validTime(request.resource.data.hora)
+        && request.resource.data.pro is string
+        && request.resource.data.pro.size() > 0
+        && request.resource.data.pro.size() <= 80
+        && request.resource.data.creado is timestamp;
+    }
+
+    function linkedOccupiedBooking(bookingId) {
+      return getAfter(
+          /databases/$(database)/documents/ocupados/$(bookingId)
+        ).data.fecha == request.resource.data.fecha
+        && getAfter(
+          /databases/$(database)/documents/ocupados/$(bookingId)
+        ).data.hora == request.resource.data.hora
+        && getAfter(
+          /databases/$(database)/documents/ocupados/$(bookingId)
+        ).data.pro == request.resource.data.pro;
+    }
+
+    function linkedTurnBooking(bookingId) {
+      return getAfter(
+          /databases/$(database)/documents/turnos/$(bookingId)
+        ).data.fecha == request.resource.data.fecha
+        && getAfter(
+          /databases/$(database)/documents/turnos/$(bookingId)
+        ).data.hora == request.resource.data.hora
+        && getAfter(
+          /databases/$(database)/documents/turnos/$(bookingId)
+        ).data.pro == request.resource.data.pro;
+    }
+
+    // El catálogo es público porque la web lo muestra sin iniciar sesión.
+    // Solo el administrador puede modificarlo.
+    match /config/catalogo {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // La web pública solo necesita consultar fecha, horario, profesional y estado.
+    // No contiene nombre ni teléfono de clientes.
+    match /ocupados/{bookingId} {
+      allow read: if true;
+      allow create: if request.auth == null
+        && !exists(/databases/$(database)/documents/ocupados/$(bookingId))
+        && validOccupiedBooking()
+        && linkedTurnBooking(bookingId);
+      allow update: if isAdmin()
+        && request.resource.data.keys().hasOnly([
+          'fecha', 'hora', 'pro', 'estado'
+        ])
+        && request.resource.data.fecha == resource.data.fecha
+        && request.resource.data.hora == resource.data.hora
+        && request.resource.data.pro == resource.data.pro
+        && request.resource.data.estado in ['pendiente', 'confirmado'];
+      allow delete: if isAdmin();
+    }
+
+    // Los datos personales de los turnos solo los puede leer y administrar el UID indicado.
+    match /turnos/{bookingId} {
+      allow create: if request.auth == null
+        && !exists(/databases/$(database)/documents/turnos/$(bookingId))
+        && validTurnBooking()
+        && linkedOccupiedBooking(bookingId);
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Denegar cualquier colección no contemplada explícitamente.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

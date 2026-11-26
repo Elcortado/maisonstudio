@@ -4,6 +4,8 @@ const MES=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Se
 const today=new Date();today.setHours(0,0,0,0);
 const maxD=new Date(today);maxD.setDate(maxD.getDate()+CONFIG.diasAdelante);
 let SERVICIOS=CONFIG.servicios,PROS=CONFIG.profesionales;
+const CATEGORIAS_OFICIALES=CONFIG.servicios.map(s=>s.n);
+const catalogoDeServiciosValido=servicios=>servicios.length===CATEGORIAS_OFICIALES.length&&CATEGORIAS_OFICIALES.every(nombre=>servicios.some(s=>s.n===nombre));
 const proDe=id=>PROS.find(p=>p.id===id)||PROS[0];
 let view=new Date(today.getFullYear(),today.getMonth(),1),selD=null,selT=null,selP=null,selE=null,booked={};
 const demo=firebaseConfig.apiKey.startsWith("TU_");
@@ -209,7 +211,10 @@ async function cargarCatalogoPublico(){
   const snap=await F.getDoc(F.doc(db,"config","catalogo"));
   if(!snap.exists())return;
   const data=snap.data();
-  if(Array.isArray(data.servicios))SERVICIOS=data.servicios.filter(s=>s&&s.n).map(s=>({n:String(s.n),p:String(s.p||""),items:Array.isArray(s.items)?s.items.filter(Boolean).map(String):[]}));
+  if(Array.isArray(data.servicios)){
+   const serviciosRemotos=data.servicios.filter(s=>s&&s.n).map(s=>({n:String(s.n),p:String(s.p||""),items:Array.isArray(s.items)?s.items.filter(Boolean).map(String):[]}));
+   SERVICIOS=catalogoDeServiciosValido(serviciosRemotos)?serviciosRemotos:CONFIG.servicios;
+  }
   if(Array.isArray(data.profesionales))PROS=data.profesionales.filter(p=>p&&p.id&&p.n).map(p=>{const clean={id:String(p.id),n:String(p.n)};if(Array.isArray(p.esp)&&p.esp.length)clean.esp=p.esp.filter(Boolean).map(String);return clean});
   renderServices();refresh();
  }catch(e){/* Se mantiene el catálogo local si Firebase no permite lectura pública. */}

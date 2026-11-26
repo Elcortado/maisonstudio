@@ -7,6 +7,8 @@ const key=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${Str
 const fmtF=f=>f.split("-").reverse().join("/");
 const hoy0=()=>{const d=new Date();d.setHours(0,0,0,0);return d};
 const copyCatalog=()=>({servicios:CONFIG.servicios.map(s=>({n:String(s.n),p:String(s.p||"Consultar"),items:Array.isArray(s.items)?s.items.map(String):[]})),profesionales:CONFIG.profesionales.map(p=>{const clean={id:String(p.id),n:String(p.n)};if(Array.isArray(p.esp)&&p.esp.length)clean.esp=p.esp.map(String);return clean})});
+const CATEGORIAS_OFICIALES=CONFIG.servicios.map(s=>s.n);
+const catalogoDeServiciosValido=servicios=>servicios.length===CATEGORIAS_OFICIALES.length&&CATEGORIAS_OFICIALES.every(nombre=>servicios.some(s=>s.n===nombre));
 let catalog=copyCatalog();
 const PN=id=>(catalog.profesionales.find(p=>p.id===id)||{}).n||"";
 const esp=t=>(catalog.servicios.find(s=>s.n===t.servicio||s.items.includes(t.servicio))||{n:"Otro"}).n; // servicio = categoría del catálogo
@@ -56,7 +58,7 @@ function renderCatalogo(){
  if(!espList||!proList)return;
  $("#espCount").textContent=catalog.servicios.length;
  $("#proCount").textContent=catalog.profesionales.length;
- espList.innerHTML=catalog.servicios.length?catalog.servicios.map(s=>`<div class="catalog-item"><div class="catalog-item__main"><strong>${esc(s.n)}</strong><small>${esc((s.items||[]).join(" · ")||"Sin tratamientos detallados")} · Desde ${esc(s.p||"Consultar")}</small></div><button class="delete-catalog" type="button" data-del-catalog="esp" data-id="${esc(s.n)}">Borrar</button></div>`).join(""):'<p class="vacio">Todavía no hay especialidades cargadas.</p>';
+ espList.innerHTML=catalog.servicios.length?catalog.servicios.map(s=>`<div class="catalog-item"><div class="catalog-item__main"><strong>${esc(s.n)}</strong><small>${esc((s.items||[]).join(" · ")||"Sin descripción")} · Desde ${esc(s.p||"Consultar")}</small></div><button class="delete-catalog" type="button" data-del-catalog="esp" data-id="${esc(s.n)}">Borrar</button></div>`).join(""):'<p class="vacio">Todavía no hay servicios cargados.</p>';
  proList.innerHTML=catalog.profesionales.length?catalog.profesionales.map(p=>`<div class="catalog-item"><div class="catalog-item__main"><strong>${esc(p.n)}</strong><small>${esc(Array.isArray(p.esp)&&p.esp.length?p.esp.join(" · "):"Todas las especialidades")}</small></div><button class="delete-catalog" type="button" data-del-catalog="pro" data-id="${esc(p.id)}">Borrar</button></div>`).join(""):'<p class="vacio">Todavía no hay especialistas cargados.</p>';
 }
 function renderFiltros(){
@@ -70,7 +72,10 @@ async function cargarCatalogo(){
  const snap=await F.getDoc(F.doc(db,"config","catalogo"));
  if(snap.exists()){
   const data=snap.data();
-  if(Array.isArray(data.servicios))catalog.servicios=data.servicios.filter(s=>s&&s.n).map(s=>({n:String(s.n),p:String(s.p||"Consultar"),items:Array.isArray(s.items)?s.items.filter(Boolean).map(String):[]}));
+   if(Array.isArray(data.servicios)){
+    const serviciosRemotos=data.servicios.filter(s=>s&&s.n).map(s=>({n:String(s.n),p:String(s.p||"Consultar"),items:Array.isArray(s.items)?s.items.filter(Boolean).map(String):[]}));
+    if(catalogoDeServiciosValido(serviciosRemotos))catalog.servicios=serviciosRemotos;
+   }
   if(Array.isArray(data.profesionales))catalog.profesionales=data.profesionales.filter(p=>p&&p.id&&p.n).map(p=>{const clean={id:String(p.id),n:String(p.n)};if(Array.isArray(p.esp)&&p.esp.length)clean.esp=p.esp.filter(Boolean).map(String);return clean});
  }
  renderCatalogo();renderFiltros();
@@ -139,7 +144,7 @@ $("#espForm").onsubmit=async e=>{
  e.preventDefault();
  const name=$("#nuevaEsp").value.trim(),price=$("#precioEsp").value.trim()||"Consultar",items=$("#tratamientosEsp").value.split(/[\n,]/).map(x=>x.trim()).filter(Boolean),button=e.submitter;
   if(catalog.servicios.some(s=>s.n.toLocaleLowerCase()===name.toLocaleLowerCase())){catalogStatus("Ese servicio ya existe.");return}
- catalog.servicios.push({n:name,p:price,items:items.length?items:["Consultar tratamientos"]});button.disabled=true;
+  catalog.servicios.push({n:name,p:price,items:items.length?items:["Consultar servicio"]});button.disabled=true;
   try{await guardarCatalogo();e.target.reset();catalogStatus("Servicio agregado correctamente.")}catch(x){catalog.servicios.pop();console.error(x);catalogStatus(`No se pudo guardar el servicio (${x.code||"error"}). Revisá las reglas de Firestore.`)}finally{button.disabled=false}
 };
 $("#proForm").onsubmit=async e=>{
