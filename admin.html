@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Panel · Maison Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<nav><div class="wrap">
+ <b>Maison Studio · Panel</b>
+ <div><span id="quien"></span><button class="btn w hide" id="salir">Salir</button></div>
+</div></nav>
+
+<main class="wrap" style="padding-top:40px;padding-bottom:80px">
+ <p class="err hide" id="aviso"></p>
+
+ <div class="panel login hide" id="loginBox">
+  <h3>Ingresar</h3>
+  <form id="login">
+   <label for="email">Email</label><input id="email" name="email" type="email" required autocomplete="username">
+   <label for="pass">Contraseña</label>
+   <div class="password-field"><input id="pass" name="pass" type="password" required autocomplete="current-password"><button type="button" id="togglePass" aria-label="Mostrar contraseña" aria-pressed="false">Mostrar</button></div>
+   <p class="err hide" id="lerr"></p>
+   <button class="btn" style="margin-top:16px;width:100%">Ingresar</button>
+  </form>
+ </div>
+
+ <div class="hide" id="panel">
+  <h2>Turnos reservados</h2>
+  <div class="filtros">
+   <div><label for="fd">Desde</label><input type="date" id="fd"></div>
+   <div><label for="fh">Hasta (vacío = sin límite)</label><input type="date" id="fh"></div>
+   <div><label for="efil">Servicio</label><select id="efil"></select></div>
+   <div id="pbox"><label for="pfil">Profesional</label><select id="pfil"></select></div>
+  </div>
+  <div class="tabs" id="rapidos">
+   <button data-r="prox">Próximos</button><button data-r="hoy">Hoy</button><button data-r="mes">Este mes</button><button data-r="30">Últimos 30 días</button><button data-r="todo">Todo el historial</button>
+  </div>
+  <div class="tabs" id="tabs">
+   <button data-f="todos" class="on">Todos</button><button data-f="pendiente">Pendientes</button><button data-f="confirmado">Confirmados</button>
+  </div>
+  <div class="tot" id="tot"></div>
+  <div id="lista"></div>
+
+  <section class="admin-section catalog-section" id="catalogo">
+   <div class="admin-section__heading"><div><p class="admin-kicker">Configuración del negocio</p><h2>Servicios y especialistas</h2><p class="admin-muted">Administrá el catálogo que aparece en la web y en el selector de reservas.</p></div><span class="admin-badge">Editor</span></div>
+   <p class="admin-status hide" id="catalogStatus" role="status"></p>
+   <div class="catalog-grid">
+    <article class="catalog-card">
+     <div class="catalog-card__heading"><div><h3>Servicios</h3><p>Sumá o quitá categorías de servicios.</p></div><span class="count-badge" id="espCount">0</span></div>
+     <form class="admin-form" id="espForm">
+       <label for="nuevaEsp">Nombre del servicio</label><input id="nuevaEsp" required maxlength="50" placeholder="Ej. Manicura">
+      <label for="precioEsp">Precio desde</label><input id="precioEsp" maxlength="20" placeholder="$25.000">
+      <label for="tratamientosEsp">Descripción del servicio</label><textarea id="tratamientosEsp" rows="3" maxlength="300" placeholder="Describí brevemente el servicio"></textarea>
+       <button class="btn" type="submit">Agregar servicio</button>
+     </form>
+     <div class="catalog-list" id="espList"></div>
+    </article>
+
+    <article class="catalog-card">
+     <div class="catalog-card__heading"><div><h3>Especialistas</h3><p>Gestioná el equipo disponible para los turnos.</p></div><span class="count-badge" id="proCount">0</span></div>
+     <form class="admin-form" id="proForm">
+      <label for="nuevoPro">Nombre</label><input id="nuevoPro" required maxlength="60" placeholder="Ej. Dra. Valentina">
+      <label for="especialidadesPro">Servicios que atiende <span>(opcional)</span></label><input id="especialidadesPro" maxlength="160" placeholder="Manicura, Pedicura, Gel Rubber">
+      <button class="btn" type="submit">Agregar especialista</button>
+     </form>
+     <div class="catalog-list" id="proList"></div>
+    </article>
+   </div>
+  </section>
+ </div>
+</main>
+
+<script src="config.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
