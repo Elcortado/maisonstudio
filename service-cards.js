@@ -35,13 +35,13 @@ const SERVICE_WORKS={
   {name:"Reparación de uña rota",description:"Reparación puntual para recuperar la forma y continuidad de una uña dañada.",meta:"3,90 € · 15 min",image:"assets/uñaRota.jpg"}
  ],
  pies:[
-  {name:"Solo esmaltado tradicional de pies",description:"Esmaltado clásico para tus pies. La pedicura no está incluida.",meta:"8,00 € · 30 min",image:"assets/servicios/pies-01.jpg"},
-  {name:"Solo pedicura",description:"Cuidado de pies y uñas. El esmaltado no está incluido.",meta:"14,00 € · 30 min",image:"assets/servicios/pies-02.jpg"},
-  {name:"Retiro pedicura semipermanente",description:"Retiro cuidadoso del esmaltado semipermanente de pies.",meta:"6,90 € · 15 min",image:"assets/servicios/pies-03.jpg"},
-  {name:"Pedicura express + esmaltado semipermanente",description:"Incluye retiro de cutícula, limado, corte de uñas y esmaltado semipermanente.",meta:"14,00 € · 30 min",image:"assets/servicios/pies-04.jpg"},
-  {name:"Pedicura + esmaltado tradicional",description:"Pedicura completa con un acabado clásico y elegante.",meta:"18,00 € · 50 min",image:"assets/servicios/pies-05.jpg"},
-  {name:"Pedicura + esmaltado semipermanente",description:"Pedicura completa con esmaltado semipermanente para un resultado duradero.",meta:"25,00 € · 1 h",image:"assets/servicios/pies-06.jpg"},
-  {name:"Manos & Pies Semipermanente",description:"Experiencia combinada de manicura con refuerzo y pedicura con esmaltado semipermanente.",meta:"44,00 € · 2 h",image:"assets/servicios/manos-pies.jpg"}
+  {name:"Solo esmaltado tradicional de pies",description:"Esmaltado clásico para tus pies. La pedicura no está incluida.",meta:"8,00 € · 30 min",image:"assets/esmaltadoPie.jpg"},
+  {name:"Solo pedicura",description:"Cuidado de pies y uñas. El esmaltado no está incluido.",meta:"14,00 € · 30 min",image:"assets/pedicuraPie.png"},
+  {name:"Retiro pedicura semipermanente",description:"Retiro cuidadoso del esmaltado semipermanente de pies.",meta:"6,90 € · 15 min",image:"assets/retiroSemiPie.jpg"},
+  {name:"Pedicura express + esmaltado semipermanente",description:"Incluye retiro de cutícula, limado, corte de uñas y esmaltado semipermanente.",meta:"14,00 € · 30 min",image:"assets/retiromasEsmaltadoPie.jpg"},
+  {name:"Pedicura + esmaltado tradicional",description:"Pedicura completa con un acabado clásico y elegante.",meta:"18,00 € · 50 min",image:"assets/pedicuraEsmaltadoCompleto.jpg"},
+  {name:"Pedicura + esmaltado semipermanente",description:"Pedicura completa con esmaltado semipermanente para un resultado duradero.",meta:"25,00 € · 1 h",image:"assets/pedicuraEsmaltadoSemi.jpeg"},
+  {name:"Manos & Pies Semipermanente",description:"Experiencia combinada de manicura con refuerzo y pedicura con esmaltado semipermanente.",meta:"44,00 € · 2 h",image:"assets/manosPies.jpg"}
  ],
  depilacion:[
   {name:"Depilación mentón",description:"Depilación con cera para mantener la zona del mentón suave y prolija.",meta:"3,00 € · 10 min",image:"assets/servicios/depilacion-01.jpg"},
