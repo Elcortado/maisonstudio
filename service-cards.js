@@ -62,8 +62,9 @@ function renderServiceWorks(){
   return;
  }
  root.innerHTML=works.map(work=>{
-  const message=encodeURIComponent('Hola Maison Studio! Quiero reservar el servicio: '+work.name+'. ¿Qué disponibilidad tienen?');
-  return '<article class="service-work-card"><div class="service-work-card__image"><img src="'+work.image+'" alt="Imagen de ejemplo de '+work.name+'" loading="lazy" onerror="this.remove();this.parentElement.classList.add(\'is-missing\')"><span>Imagen de ejemplo</span></div><div class="service-work-card__body"><h3>'+work.name+'</h3><p>'+work.description+'</p><small>'+work.meta+'</small><a class="btn" href="https://wa.me/'+CONFIG.whatsapp+'?text='+message+'" target="_blank" rel="noopener">Reservar cita</a></div></article>';
+  const itemSlug=String(work.name).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+  const detailPage=service+"-"+itemSlug+".html";
+  return '<article class="service-work-card"><div class="service-work-card__image"><img src="'+work.image+'" alt="Imagen de ejemplo de '+work.name+'" loading="lazy" onerror="this.remove();this.parentElement.classList.add(\'is-missing\')"><span>Imagen de ejemplo</span></div><div class="service-work-card__body"><h3>'+work.name+'</h3><p>'+work.description+'</p><small>'+work.meta+'</small><a class="btn" href="'+detailPage+'">Ver detalle y reservar</a></div></article>';
  }).join("");
 }
 

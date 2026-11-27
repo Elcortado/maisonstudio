@@ -12,8 +12,9 @@ const demo=firebaseConfig.apiKey.startsWith("TU_");
 let db,F,fbReady=null;
 
 $("#waFlot").href="https://wa.me/"+CONFIG.whatsapp;
+const SERVICE_IMAGES={facial:"assets/limpiezaBasica.jpg",pestanas:"assets/extensioPestañaClasica.jpeg",cejas:"assets/depilacionCejas.jpg",manos:"assets/manicura.jpeg",pies:"assets/pedicuraPie.png",depilacion:"assets/depilacionMenton.jpg"};
 const slugServicio=s=>s.slug||String(s.n).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-");
-const renderServices=()=>$("#cats").innerHTML=SERVICIOS.map((s,i)=>{const description=(s.items||[]).filter(Boolean).join(" ");return`<article class="card service-card"><span class="service-card__number">${String(i+1).padStart(2,"0")}</span><h3>${s.n}</h3><p class="service-card__description">${description}</p><a class="service-card__link" href="${slugServicio(s)}.html">Ver servicio <span aria-hidden="true">↗</span></a></article>`}).join("");
+const renderServices=()=>$("#cats").innerHTML=SERVICIOS.map((s,i)=>{const description=(s.items||[]).filter(Boolean).join(" "),slug=slugServicio(s),image=s.imagen||SERVICE_IMAGES[slug]||"assets/logo.png";return`<article class="card service-card"><div class="service-card__image"><img src="${image}" alt="${s.n}: servicio de Maison Studio" loading="lazy"></div><span class="service-card__number">${String(i+1).padStart(2,"0")}</span><h3>${s.n}</h3><p class="service-card__description">${description}</p><a class="btn service-card__link" href="${slug}.html">Ver servicio <span aria-hidden="true">↗</span></a></article>`}).join("");
 renderServices();
 
 /* Menú responsive */

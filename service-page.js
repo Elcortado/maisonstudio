@@ -10,3 +10,11 @@ if(navToggle&&mainNav){
 
 const wa=document.querySelector("#waFlot");
 if(wa&&typeof CONFIG!=="undefined")wa.href="https://wa.me/"+CONFIG.whatsapp;
+
+const SERVICE_IMAGES={facial:"assets/limpiezaBasica.jpg",pestanas:"assets/extensioPestañaClasica.jpeg",cejas:"assets/depilacionCejas.jpg",manos:"assets/manicura.jpeg",pies:"assets/pedicuraPie.png",depilacion:"assets/depilacionMenton.jpg"};
+const currentService=document.body.dataset.service;
+const serviceHero=document.querySelector(".service-detail__hero");
+const serviceImage=SERVICE_IMAGES[currentService];
+if(serviceHero&&serviceImage&&!serviceHero.querySelector(".service-detail__hero-media")){
+ serviceHero.insertAdjacentHTML("beforeend",`<div class="service-detail__hero-media" aria-hidden="true"><img src="${serviceImage}" alt=""></div>`);
+}
