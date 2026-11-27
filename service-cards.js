@@ -58,12 +58,12 @@ function renderServiceWorks(){
  if(!root)return;
  const service=document.body.dataset.service,works=SERVICE_WORKS[service]||[];
  if(!works.length){
-  root.innerHTML='<article class="service-work-empty"><p class="eyebrow">Próximamente</p><h3>Consultá por pestañas</h3><p>Actualmente Booksy no muestra servicios publicados en esta categoría. Escribinos y te contamos las opciones disponibles.</p><a class="btn" href="https://wa.me/'+CONFIG.whatsapp+'?text='+encodeURIComponent('Hola Maison Studio! Quiero consultar por el servicio de pestañas.')+'" target="_blank" rel="noopener">Consultar por WhatsApp</a></article>';
+  root.innerHTML='<article class="service-work-empty"><p class="eyebrow">Próximamente</p><h3>Consulta por pestañas</h3><p>Actualmente Booksy no muestra servicios publicados en esta categoría. Escríbenos y te contamos las opciones disponibles.</p><a class="btn" href="https://wa.me/'+CONFIG.whatsapp+'?text='+encodeURIComponent('Hola Maison Studio! Quiero consultar por el servicio de pestañas.')+'" target="_blank" rel="noopener">Consultar por WhatsApp</a></article>';
   return;
  }
  root.innerHTML=works.map(work=>{
   const message=encodeURIComponent('Hola Maison Studio! Quiero reservar el servicio: '+work.name+'. ¿Qué disponibilidad tienen?');
-  return '<article class="service-work-card"><div class="service-work-card__image"><img src="'+work.image+'" alt="Imagen de ejemplo de '+work.name+'" loading="lazy" onerror="this.remove();this.parentElement.classList.add(\'is-missing\')"><span>Imagen de ejemplo</span></div><div class="service-work-card__body"><h3>'+work.name+'</h3><p>'+work.description+'</p><small>'+work.meta+'</small><a class="btn" href="https://wa.me/'+CONFIG.whatsapp+'?text='+message+'" target="_blank" rel="noopener">Reservar turno</a></div></article>';
+  return '<article class="service-work-card"><div class="service-work-card__image"><img src="'+work.image+'" alt="Imagen de ejemplo de '+work.name+'" loading="lazy" onerror="this.remove();this.parentElement.classList.add(\'is-missing\')"><span>Imagen de ejemplo</span></div><div class="service-work-card__body"><h3>'+work.name+'</h3><p>'+work.description+'</p><small>'+work.meta+'</small><a class="btn" href="https://wa.me/'+CONFIG.whatsapp+'?text='+message+'" target="_blank" rel="noopener">Reservar cita</a></div></article>';
  }).join("");
 }
 

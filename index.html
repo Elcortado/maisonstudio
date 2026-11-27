@@ -29,7 +29,10 @@
   "geo":{"@type":"GeoCoordinates","latitude":40.0500237,"longitude":-4.2133435},
   "areaServed":[{"@type":"City","name":"Fuensalida"},{"@type":"AdministrativeArea","name":"Toledo"}],
   "serviceType":["Manicura","Uñas","Pedicura","Pestañas","Cejas","Depilación","Tratamientos faciales"],
-  "sameAs":["https://booksy.com/es-es/180259_maison-studio-nails_salon-de-unas_37969_fuensalida"]
+  "sameAs":["https://booksy.com/es-es/180259_maison-studio-nails_salon-de-unas_37969_fuensalida"],
+  "openingHoursSpecification":[
+    {"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"09:00","closes":"21:30"}
+  ]
 }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -46,7 +49,7 @@
    <span></span><span></span><span></span>
   </button>
   <div class="nav__links" id="mainNav">
-   <a href="#servicios">Servicios</a><a href="#trabajos">Trabajos</a><a href="#nosotros">Nosotros</a><a href="#consulta">Consulta</a><a href="#contacto">Contacto</a><a class="btn w" href="#reservas">Reservar turno</a>
+   <a href="#servicios">Servicios</a><a href="#trabajos">Trabajos</a><a href="#nosotros">Nosotros</a><a href="#consulta">Consulta</a><a href="#contacto">Contacto</a><a class="btn w" href="#reservas">Reservar cita</a>
   </div>
  </div>
 </nav>
@@ -59,22 +62,22 @@
  <div class="hero__copy">
  <p class="eyebrow">Maison Studio</p>
   <h1>Donde la belleza está en cada detalle</h1>
-  <p>Un lugar pensado para vos, donde cuidamos tu belleza y bienestar con dedicación, cariño y atención personalizada.</p>
-  <a class="btn w" href="#reservas">Reservar turno</a>
+  <p>Un lugar pensado para ti, donde cuidamos tu belleza y bienestar con dedicación, cariño y atención personalizada.</p>
+  <a class="btn w" href="#reservas">Reservar cita</a>
  </div>
  </div>
 </header>
 
 <section id="servicios"><div class="wrap">
  <h2>Nuestros servicios</h2>
- <p class="sub">Descubrí todo lo que tenemos para vos y disfrutá de tratamientos pensados para cuidar tu belleza, realzar tu imagen y regalarte ese momento de bienestar que te merecés.</p>
+ <p class="sub">Descubre todo lo que tenemos para ti y disfruta de tratamientos pensados para cuidar tu belleza, realzar tu imagen y regalarte ese momento de bienestar que mereces.</p>
  <div class="grid" id="cats"></div>
 </div></section>
 
  <section id="trabajos" class="work-gallery"><div class="wrap">
   <p class="eyebrow">Inspiración Maison</p>
   <h2>Trabajos realizados</h2>
-  <p class="sub">Deslizá para descubrir algunos de nuestros diseños.</p>
+  <p class="sub">Desliza para descubrir algunos de nuestros diseños.</p>
   <div class="work-carousel" id="workCarousel">
    <div class="work-viewport">
     <div class="work-track" id="workTrack"></div>
@@ -96,20 +99,20 @@
 </div></section>
 
 <section id="reservas"><div class="wrap">
- <h2>Reservá tu turno</h2>
- <p class="sub">Elegí el día y el servicio. El horario queda pendiente de coordinación hasta que te escribamos por WhatsApp.</p>
+ <h2>Reserva tu cita</h2>
+ <p class="sub">Elige el día y el servicio. El horario queda pendiente de coordinación hasta que te escribamos por WhatsApp.</p>
  <div id="demo" class="hide">Modo demostración: Firebase todavía no está configurado; la solicitud se enviará por WhatsApp sin guardarse en la nube.</div>
  <div class="book">
   <div class="panel">
-   <h3>1. Elegí el día</h3>
+   <h3>1. Elige el día</h3>
    <div class="mh"><button id="prev" aria-label="Mes anterior">‹</button><span id="mes"></span><button id="next" aria-label="Mes siguiente">›</button></div>
    <div id="grid"></div>
-   <p class="hint">Atendemos de lunes a viernes de 9 a 19 h y sábados de 9 a 13 h.</p>
+   <p class="hint">Atendemos de lunes a domingo de 09:00 a 21:30.</p>
   </div>
   <div>
    <div class="panel" id="slotBox">
-     <h3>2. Elegí el servicio</h3>
-    <p class="hint" id="slotHint" style="margin:0">Primero seleccioná un día en el calendario.</p>
+     <h3>2. Elige el servicio</h3>
+    <p class="hint" id="slotHint" style="margin:0">Primero selecciona un día en el calendario.</p>
     <div id="fechaTxt" class="hint hide" style="margin:0 0 10px;text-transform:capitalize"></div>
     <div id="espBox" class="hide"><p class="lbl">Servicio</p><div class="pros" id="esps"></div></div>
    </div>
@@ -121,15 +124,15 @@
     <label for="comentario">Comentarios (opcional)</label><textarea id="comentario" name="comentario" rows="2" maxlength="300"></textarea>
      <p class="hint" id="resumen"></p>
      <p class="err hide" id="err"></p>
-     <button class="btn" id="enviar" style="margin-top:14px;width:100%">Solicitar turno</button>
+     <button class="btn" id="enviar" style="margin-top:14px;width:100%">Solicitar cita</button>
     </form>
    </div>
    <div class="panel okbox hide" id="okBox">
     <span class="tag">Pendiente de confirmación</span>
-    <h3 style="margin-top:12px">¡Turno reservado!</h3>
-    <p>Último paso: enviá tus datos por WhatsApp para que podamos confirmarlo.</p>
+    <h3 style="margin-top:12px">¡Cita reservada!</h3>
+    <p>Último paso: envía tus datos por WhatsApp para que podamos confirmarla.</p>
     <a class="btn" id="waLink" target="_blank" rel="noopener" style="background:var(--ok)">Enviar por WhatsApp</a>
-    <p><button class="hint" id="otro" style="background:none;border:0;text-decoration:underline;cursor:pointer;color:var(--m)">Reservar otro turno</button></p>
+    <p><button class="hint" id="otro" style="background:none;border:0;text-decoration:underline;cursor:pointer;color:var(--m)">Reservar otra cita</button></p>
    </div>
   </div>
  </div>
@@ -138,22 +141,22 @@
 <section id="consulta" class="contact-section"><div class="wrap">
  <div class="contact-heading">
   <p class="eyebrow">Estamos para ayudarte</p>
-  <h2>¿Tenés una consulta?</h2>
-  <p class="sub">Escribinos qué necesitás y te respondemos por WhatsApp con una recomendación personalizada.</p>
+  <h2>¿Tienes una consulta?</h2>
+  <p class="sub">Escríbenos qué necesitas y te respondemos por WhatsApp con una recomendación personalizada.</p>
  </div>
  <div class="contact-layout">
   <div class="contact-card">
-   <h3>Enviá tu consulta personalizada</h3>
+   <h3>Envía tu consulta personalizada</h3>
    <form id="consultaForm" class="consultation-form">
     <label for="consultaNombre">Nombre y apellido</label><input id="consultaNombre" name="nombre" required maxlength="80" autocomplete="name">
     <label for="consultaContacto">Teléfono / WhatsApp</label><input id="consultaContacto" name="telefono" required maxlength="30" type="tel" autocomplete="tel">
-    <label for="consultaMensaje">¿En qué podemos ayudarte?</label><textarea id="consultaMensaje" name="mensaje" required rows="5" maxlength="500" placeholder="Contanos qué servicio te interesa o qué necesitás saber..."></textarea>
+    <label for="consultaMensaje">¿En qué podemos ayudarte?</label><textarea id="consultaMensaje" name="mensaje" required rows="5" maxlength="500" placeholder="Cuéntanos qué servicio te interesa o qué necesitas saber..."></textarea>
     <button class="btn" type="submit">Enviar consulta</button>
     <p class="hint hide" id="consultaStatus" role="status"></p>
    </form>
   </div>
   <div class="contact-card map-card">
-   <div class="map-card__heading"><div><p class="eyebrow">Encontranos</p><h3>Visitá nuestro espacio</h3></div><span class="map-pin" aria-hidden="true">⌖</span></div>
+   <div class="map-card__heading"><div><p class="eyebrow">Encuéntranos</p><h3>Visita nuestro espacio</h3></div><span class="map-pin" aria-hidden="true">⌖</span></div>
     <div class="map-frame"><iframe title="Ubicación de Maison Studio en Fuensalida, Toledo, España" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d190.88361782200798!2d-4.213343503217931!3d40.050023745155634!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd41dbf6f104b9ef%3A0x61f136b800caf79d!2sMaison%20Studio%20Nails!5e0!3m2!1ses-419!2sar!4v1795712401687!5m2!1ses-419!2sar"></iframe></div>
    <div class="map-card__footer"><p>C/ Azucena 7, Fuensalida, Toledo</p><a href="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d190.88361782200798!2d-4.213343503217931!3d40.050023745155634!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd41dbf6f104b9ef%3A0x61f136b800caf79d!2sMaison%20Studio%20Nails!5e0!3m2!1ses-419!2sar!4v1795712401687!5m2!1ses-419!2sar" target="_blank" rel="noopener">Abrir en Google Maps ↗</a></div>
   </div>
@@ -181,8 +184,8 @@
  <div class="fg">
   <div class="footer-brand"><img src="assets/logo.png" alt="Maison Studio"><div><h3>Maison Studio</h3><p>Tu espacio de belleza y bienestar.</p></div></div>
   <div><h3>Dónde estamos</h3><p>C/ Azucena 7, Fuensalida (Toledo) <br>WhatsApp +54 362 518-1576</p></div>
-  <div><h3>Horarios</h3><p>Lunes a domingo: 09:00 a 21:30 Instagram: @maisonstudionails</p></div>
-  <div class="footer-social"><h3>Seguinos</h3><div class="social-links">
+  <div><h3>Horarios</h3><p>Lunes a domingo de 09:00 a 21:30.<br>Instagram: @maisonstudionails</p></div>
+  <div class="footer-social"><h3>Síguenos</h3><div class="social-links">
    <a class="social-link social-link--facebook" href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-3.3 0-5 1.7-5 5v3H6v4h3v8h4v-8h3.3l.7-4H13V9c0-.6.4-1 1-1Z"></path></svg><span class="sr-only">Facebook</span>
    </a>

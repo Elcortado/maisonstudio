@@ -48,7 +48,7 @@ const TRABAJOS=[
  {src:"assets/trabajo-07.jpeg",alt:"Diseño minimalista de Nail Art"},
  {src:"assets/liftingpestañas.jpeg",alt:"Uñas acrílicas con acabado sofisticado"}
 ];
-const renderWorks=()=>$("#workTrack").innerHTML=TRABAJOS.map(work=>`<figure class="work-card"><div class="work-card__media"><img src="${work.src}" alt="${work.alt}" loading="lazy" onerror="this.remove();this.parentElement.classList.add('is-missing')"><span class="work-card__placeholder">Cargá una imagen vertical</span></div></figure>`).join("");
+const renderWorks=()=>$("#workTrack").innerHTML=TRABAJOS.map(work=>`<figure class="work-card"><div class="work-card__media"><img src="${work.src}" alt="${work.alt}" loading="lazy" onerror="this.remove();this.parentElement.classList.add('is-missing')"><span class="work-card__placeholder">Carga una imagen vertical</span></div></figure>`).join("");
 renderWorks();
 const workCarousel=$("#workCarousel"),workTrack=$("#workTrack"),workPrev=$("#workPrev"),workNext=$("#workNext"),workDots=$("#workDots");
 if(workCarousel&&workTrack){
@@ -148,7 +148,7 @@ if(demo){
 }
 
 $("#grid").onclick=e=>{const b=e.target.closest(".day");if(!b)return;selD=b.dataset.d;selE=null;$("#formBox").classList.add("hide");$("#okBox").classList.add("hide");refresh()};
-$("#esps").onclick=e=>{const b=e.target.closest("[data-e]");if(!b)return;selE=b.dataset.e;$("#okBox").classList.add("hide");$("#formBox").classList.remove("hide");$("#err").classList.add("hide");$("#resumen").textContent="Solicitud de turno para "+selE+": "+fmtF(selD)+". El horario se coordinará por WhatsApp.";slots();$("#formBox").scrollIntoView({behavior:"smooth",block:"nearest"})};
+$("#esps").onclick=e=>{const b=e.target.closest("[data-e]");if(!b)return;selE=b.dataset.e;$("#okBox").classList.add("hide");$("#formBox").classList.remove("hide");$("#err").classList.add("hide");$("#resumen").textContent="Solicitud de cita para "+selE+": "+fmtF(selD)+". El horario se coordinará por WhatsApp.";slots();$("#formBox").scrollIntoView({behavior:"smooth",block:"nearest"})};
 const mover=n=>{view=new Date(view.getFullYear(),view.getMonth()+n,1);limpiarSel();$("#okBox").classList.add("hide");cal();escuchar()};
 $("#prev").onclick=()=>mover(-1);$("#next").onclick=()=>mover(1);
 
@@ -159,15 +159,15 @@ $("#form").onsubmit=async e=>{
  btn.disabled=true;btn.textContent="Enviando…";err.classList.add("hide");
  try{await guardar(id,rec)}
  catch(x){
-  err.textContent="No pudimos guardar la solicitud. Revisá tu conexión e intentá de nuevo.";
-  err.classList.remove("hide");btn.disabled=false;btn.textContent="Solicitar turno";
+  err.textContent="No pudimos guardar la solicitud. Revisa tu conexión e inténtalo de nuevo.";
+  err.classList.remove("hide");btn.disabled=false;btn.textContent="Solicitar cita";
   return;
  }
- const msg=`Hola Maison Studio! Quiero solicitar un turno:\n\nNombre: ${rec.nombre}\nTeléfono: ${rec.telefono}\nServicio: ${rec.servicio}\nDía solicitado: ${fmtF(rec.fecha)}\nHorario: a coordinar\n`+(rec.comentario?`Comentarios: ${rec.comentario}\n`:"")+`\nQuedo pendiente de confirmación.`;
+ const msg=`Hola Maison Studio! Quiero solicitar una cita:\n\nNombre: ${rec.nombre}\nTeléfono: ${rec.telefono}\nServicio: ${rec.servicio}\nDía solicitado: ${fmtF(rec.fecha)}\nHorario: a coordinar\n`+(rec.comentario?`Comentarios: ${rec.comentario}\n`:"")+`\nQuedo pendiente de confirmación.`;
  const url=`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`;
  $("#waLink").href=url;
  $("#formBox").classList.add("hide");$("#okBox").classList.remove("hide");
- e.target.reset();btn.disabled=false;btn.textContent="Solicitar turno";
+ e.target.reset();btn.disabled=false;btn.textContent="Solicitar cita";
  selE=null;refresh();
  window.open(url,"_blank");
 };
