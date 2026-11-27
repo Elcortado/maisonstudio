@@ -18,7 +18,7 @@ function wa(t){
  let d=String(t.telefono).replace(/\D/g,"").replace(/^0+/,"");
  if(!d.startsWith("54"))d=PAIS+d;
  const momento=t.hora&&t.hora!=="A confirmar"?` el ${fmtF(t.fecha)} a las ${t.hora} h`:` el ${fmtF(t.fecha)}; coordinamos el horario por WhatsApp`;
- const m=`Hola ${t.nombre}! Te confirmamos tu turno de ${t.servicio}${PN(t.pro)?" con "+PN(t.pro):""}${momento}. ¡Te esperamos en Maison Studio!`;
+ const m=`Hola ${t.nombre}! Te confirmamos tu cita de ${t.servicio}${PN(t.pro)?" con "+PN(t.pro):""}${momento}. ¡Te esperamos en Maison Studio!`;
  return`https://wa.me/${d}?text=${encodeURIComponent(m)}`;
 }
 const txtRango=()=>dD&&dH?(dD===dH?`el ${fmtF(dD)}`:`del ${fmtF(dD)} al ${fmtF(dH)}`):dD?`desde el ${fmtF(dD)} en adelante`:dH?`hasta el ${fmtF(dH)}`:"en todo el historial";
@@ -29,9 +29,9 @@ function render(){
   .sort((a,b)=>(a.fecha+(a.hora||"")).localeCompare(b.fecha+(b.hora||"")));
  const pend=rows.filter(t=>t.estado==="pendiente").length;
  const cuenta=f=>{const m={};rows.forEach(t=>{const k=f(t);m[k]=(m[k]||0)+1});return Object.entries(m).map(([k,v])=>`${esc(k)} <b>${v}</b>`).join(" · ")};
- $("#tot").innerHTML=`<p class="n"><b>${rows.length}</b> ${rows.length===1?"turno":"turnos"} ${txtRango()}</p>`+(rows.length
+ $("#tot").innerHTML=`<p class="n"><b>${rows.length}</b> ${rows.length===1?"cita":"citas"} ${txtRango()}</p>`+(rows.length
   ?`<p>${pend} pendientes · ${rows.length-pend} confirmados</p><p>Por servicio: ${cuenta(esp)}</p>`+(catalog.profesionales.length>1?`<p>Por profesional: ${cuenta(t=>PN(t.pro)||"Sin asignar")}</p>`:""):"");
- if(!rows.length){$("#lista").innerHTML='<p class="vacio">No hay turnos para esta selección.</p>';return}
+ if(!rows.length){$("#lista").innerHTML='<p class="vacio">No hay citas para esta selección.</p>';return}
  let h="",dia="";
  for(const t of rows){
   if(t.fecha!==dia){
@@ -50,7 +50,7 @@ function render(){
 }
 
 const aviso=m=>{$("#aviso").textContent=m;$("#aviso").classList.remove("hide")};
-const sinPermiso=()=>aviso("No tenés permiso para ver los turnos. Revisá las reglas de Firestore y que el UID cargado sea el tuyo.");
+const sinPermiso=()=>aviso("No tienes permiso para ver las citas. Revisa las reglas de Firestore y que el UID cargado sea el tuyo.");
 const catalogStatus=m=>{const el=$("#catalogStatus");el.textContent=m;el.classList.remove("hide")};
 const slug=s=>String(s).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
 
@@ -144,7 +144,7 @@ $("#espForm").onsubmit=async e=>{
  const name=$("#nuevaEsp").value.trim(),price=$("#precioEsp").value.trim()||"Consultar",items=$("#tratamientosEsp").value.split(/[\n,]/).map(x=>x.trim()).filter(Boolean),button=e.submitter;
   if(catalog.servicios.some(s=>s.n.toLocaleLowerCase()===name.toLocaleLowerCase())){catalogStatus("Ese servicio ya existe.");return}
   catalog.servicios.push({n:name,p:price,items:items.length?items:["Consultar servicio"]});button.disabled=true;
-  try{await guardarCatalogo();e.target.reset();catalogStatus("Servicio agregado correctamente.")}catch(x){catalog.servicios.pop();console.error(x);catalogStatus(`No se pudo guardar el servicio (${x.code||"error"}). Revisá las reglas de Firestore.`)}finally{button.disabled=false}
+  try{await guardarCatalogo();e.target.reset();catalogStatus("Servicio agregado correctamente.")}catch(x){catalog.servicios.pop();console.error(x);catalogStatus(`No se pudo guardar el servicio (${x.code||"error"}). Revisa las reglas de Firestore.`)}finally{button.disabled=false}
 };
 $("#proForm").onsubmit=async e=>{
  e.preventDefault();
@@ -152,7 +152,7 @@ $("#proForm").onsubmit=async e=>{
  if(catalog.profesionales.some(p=>p.n.toLocaleLowerCase()===name.toLocaleLowerCase())){catalogStatus("Ese especialista ya existe.");return}
  const id=`${slug(name)||"especialista"}-${Date.now().toString(36)}`;
  catalog.profesionales.push(assigned.length?{id,n:name,esp:assigned}:{id,n:name});button.disabled=true;
- try{await guardarCatalogo();e.target.reset();catalogStatus("Especialista agregado correctamente.")}catch(x){catalog.profesionales.pop();console.error(x);catalogStatus(`No se pudo guardar el especialista (${x.code||"error"}). Revisá las reglas de Firestore.`)}finally{button.disabled=false}
+ try{await guardarCatalogo();e.target.reset();catalogStatus("Especialista agregado correctamente.")}catch(x){catalog.profesionales.pop();console.error(x);catalogStatus(`No se pudo guardar el especialista (${x.code||"error"}). Revisa las reglas de Firestore.`)}finally{button.disabled=false}
 };
 $("#catalogo").onclick=async e=>{
  const button=e.target.closest("[data-del-catalog]");if(!button)return;
@@ -163,17 +163,17 @@ $("#catalogo").onclick=async e=>{
   catalog.servicios=catalog.servicios.filter(s=>s.n!==id);
   catalog.profesionales=catalog.profesionales.map(p=>Array.isArray(p.esp)?{...p,esp:p.esp.filter(n=>n!==id)}:p);
  }else catalog.profesionales=catalog.profesionales.filter(p=>p.id!==id);
-  try{await guardarCatalogo();catalogStatus(`${type==="esp"?"Servicio":"Especialista"} eliminado correctamente.`)}catch(x){catalog=previous;renderCatalogo();renderFiltros();console.error(x);catalogStatus(`No se pudo eliminar (${x.code||"error"}). Revisá las reglas de Firestore.`)}
+  try{await guardarCatalogo();catalogStatus(`${type==="esp"?"Servicio":"Especialista"} eliminado correctamente.`)}catch(x){catalog=previous;renderCatalogo();renderFiltros();console.error(x);catalogStatus(`No se pudo eliminar (${x.code||"error"}). Revisa las reglas de Firestore.`)}
 };
 
 $("#lista").onclick=async e=>{
  const b=e.target.closest("[data-a]");if(!b)return;const id=b.dataset.id;
  try{
   if(b.dataset.a==="ok")await F.updateDoc(F.doc(db,"turnos",id),{estado:"confirmado"});
-  else if(confirm("¿Cancelar esta solicitud de turno?")){
+  else if(confirm("¿Cancelar esta solicitud de cita?")){
    const w=F.writeBatch(db);w.delete(F.doc(db,"ocupados",id));w.delete(F.doc(db,"turnos",id));await w.commit();
   }
- }catch(x){alert("No se pudo completar la acción. Revisá tu conexión y los permisos.")}
+ }catch(x){alert("No se pudo completar la acción. Revisa tu conexión y los permisos.")}
 };
 $("#login").onsubmit=async e=>{
  e.preventDefault();const f=Object.fromEntries(new FormData(e.target)),er=$("#lerr");er.classList.add("hide");
@@ -183,10 +183,10 @@ $("#login").onsubmit=async e=>{
 $("#salir").onclick=()=>AU.signOut(auth);
 
 (async()=>{
- if(firebaseConfig.apiKey.startsWith("TU_")){aviso("Falta configurar Firebase: pegá tu firebaseConfig en config.js.");return}
+ if(firebaseConfig.apiKey.startsWith("TU_")){aviso("Falta configurar Firebase: pega tu firebaseConfig en config.js.");return}
  try{
   const[a,f,au]=await Promise.all([import(FB+"firebase-app.js"),import(FB+"firebase-firestore.js"),import(FB+"firebase-auth.js")]);
   F=f;AU=au;const app=a.initializeApp(firebaseConfig);db=f.getFirestore(app);auth=au.getAuth(app);
   au.onAuthStateChanged(auth,u=>u?entrar(u):salir());
- }catch(x){aviso("No se pudo cargar Firebase. Revisá tu conexión.")}
+ }catch(x){aviso("No se pudo cargar Firebase. Revisa tu conexión.")}
 })();

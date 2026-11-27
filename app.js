@@ -140,9 +140,7 @@ async function guardar(id,rec){
  b.set(F.doc(db,"turnos",id),{...rec,creado:F.serverTimestamp()});
  await b.commit();
 }
-if(demo){
- $("#demo").classList.remove("hide");
-}else{
+if(!demo){
  const FB="https://www.gstatic.com/firebasejs/10.12.2/";
  fbReady=Promise.all([import(FB+"firebase-app.js"),import(FB+"firebase-firestore.js")]).then(([a,f])=>{F=f;db=f.getFirestore(a.initializeApp(firebaseConfig))});
 }

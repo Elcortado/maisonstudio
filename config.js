@@ -1,10 +1,10 @@
 // Configuración de la web y del panel: horarios, servicios, profesionales, WhatsApp y Firebase.
 const CONFIG = {
   whatsapp: "543625181576", // código de país + número, sin + ni espacios
-  duracion: 60, // minutos por turno
+  duracion: 60, // minutos por cita
   diasAdelante: 60, // cuántos días a futuro se puede reservar
   profesionales: [
-    // una agenda por profesional o cabina; dejá una sola para ocultar el selector
+    // una agenda por profesional o cabina; deja una sola para ocultar el selector
     { id: "ana", n: "Ana" },
     { id: "lucia", n: "Lucía" }, // opcional, horarios propios: {id:"lucia",n:"Lucía",horarios:{1:["14:00","19:00"]}}
   ],
@@ -58,7 +58,7 @@ const CONFIG = {
 };
 
 // Configuración de Firebase compartida por la web (app.js) y el panel (admin.js).
-// Pegá acá el firebaseConfig que te da la consola de Firebase.
+// Pega aquí el firebaseConfig que te da la consola de Firebase.
 const firebaseConfig = {
   apiKey: "AIzaSyDF-3x0QxjwpkP5xbXL7n8n91IGOQ3pK7w",
   authDomain: "usuarioprueba-68bd9.firebaseapp.com",
